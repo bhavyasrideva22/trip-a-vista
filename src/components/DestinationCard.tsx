@@ -58,6 +58,7 @@ const DestinationCard = ({ image, title, location, price, rating, reviews }: Des
         open={isBookingOpen} 
         onOpenChange={setIsBookingOpen}
         destination={title}
+        price={price}
       />
     </>
   );

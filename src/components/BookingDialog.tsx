@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,10 +10,12 @@ interface BookingDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   destination: string;
+  price: string;
 }
 
-const BookingDialog = ({ open, onOpenChange, destination }: BookingDialogProps) => {
+const BookingDialog = ({ open, onOpenChange, destination, price }: BookingDialogProps) => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -22,11 +25,21 @@ const BookingDialog = ({ open, onOpenChange, destination }: BookingDialogProps) 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Booking Request Submitted!",
-      description: `We'll contact you soon about your trip to ${destination}.`,
-    });
     onOpenChange(false);
+    
+    // Navigate to roadmap page with booking data (before payment)
+    navigate("/trip-roadmap", {
+      state: {
+        name: formData.name,
+        email: formData.email,
+        date: formData.date,
+        travelers: formData.travelers,
+        destination: destination,
+        price: price,
+      },
+    });
+    
+    // Reset form
     setFormData({ name: "", email: "", date: "", travelers: "1" });
   };
 
